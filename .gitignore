@@ -1,3 +1,14 @@
+
+### OSX ###
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Don't commit the zipfiles
+*.zip
+
+
+
 *.gem
 *.rbc
 /.config
