@@ -15,10 +15,11 @@ Parameters:
   pAccountName:
     Description: Account Description (ie dev-account)
     Type: String
+    Default: MyAWSAccount
   pIconEmoji:
     Description: Emoji string to appear in Slack
     Type: String
-    Default: ":turd:"
+    Default: ":cloud:"
 
   # Lambda Deploy Params
   pArtifactBucket:
@@ -27,20 +28,25 @@ Parameters:
   pArtifactPrefix:
     Description: Directory where lambdas are
     Type: String
+    Default: aws-admin-SlackNotifications
   pLambdaVersion:
     Description: VersionPath of the Lambda zip
     Type: String
   pSlackLambdaZipFile:
     Description: Filename of the Slack Lambda Zip
     Type: String
+    Default: aws-admin-SlackNotifications.zip
 
   # Function Info
   pLambdaFunctionName:
     Description: Name of the Lambda Function
     Type: String
+    Default: aws-admin-SlackNotifications
   pLambdaAlias:
     Description: Alias of this Lambda Function
     Type: String
+    Default: MyAWSAccount
+
 
 
 
