@@ -8,7 +8,7 @@
 *.zip
 
 /Attic/*
-
+*Manifest.yaml
 
 *.gem
 *.rbc

@@ -45,28 +45,7 @@ Parameters:
 
 
 Resources:
-  # SlackEncryptionKMSKey:
-  #   Type: AWS::KMS::Key
-  #   Properties:
-  #     Description: Slack API Encryption Key
-  #     Enabled: 'true'
-  #     EnableKeyRotation: 'false'
-  #     KeyPolicy:
-  #       Version: '2012-10-17'
-  #       Id: SlackEncryptionKMSKey
-  #       Statement:
-  #       - Sid: Allow use of the key
-  #         Effect: Allow
-  #         Principal:
-  #           AWS:
-  #             Fn::Join:
-  #             - ''
-  #             - - 'arn:aws:iam::'
-  #               - Ref: AWS::AccountId
-  #               - ':root'
-  #         Action:
-  #         - kms:*
-  #         Resource: '*'
+
   SlackNotificationLambdaRole:
     Type: AWS::IAM::Role
     Properties:
@@ -89,22 +68,6 @@ Resources:
             - cloudwatch:*
             Effect: Allow
             Resource: '*'
-      # - PolicyName: KMS
-      #   PolicyDocument:
-      #     Version: '2012-10-17'
-      #     Statement:
-      #     - Action:
-      #       - kms:Decrypt
-      #       Effect: Allow
-      #       Resource:
-      #         Fn::Join:
-      #         - ''
-      #         - - 'arn:aws:kms:'
-      #           - Ref: AWS::Region
-      #           - ':'
-      #           - Ref: AWS::AccountId
-      #           - ':key/'
-      #           - Ref: SlackEncryptionKMSKey
       - PolicyName: EC2DescribeInstances
         PolicyDocument:
           Version: '2012-10-17'
@@ -137,10 +100,10 @@ Resources:
       Role: !GetAtt SlackNotificationLambdaRole.Arn
       Environment:
         Variables:
-        - HOOK_URL: !Ref pSlackWebhookURL
-        - ACCOUNT_NAME: !Ref pAccountName
-        - SLACK_CHANNEL: !Ref pSlackChannel
-        - ICON_EMOJI: !Ref pIconEmoji
+          HOOK_URL: !Ref pSlackWebhookURL
+          ACCOUNT_NAME: !Ref pAccountName
+          SLACK_CHANNEL: !Ref pSlackChannel
+          ICON_EMOJI: !Ref pIconEmoji
 
   SlackNotificationLambdaAlias:
     Type: AWS::Lambda::Alias
@@ -179,7 +142,7 @@ Resources:
   Ec2StartStopRule:
     Type: AWS::Events::Rule
     Properties:
-      Name: InstanceStateChangeToSlack
+      Name: aws-admin-InstanceStateChangeToSlack
       Description: Send Instance State Change notifications to Slack (via Lambda)
       EventPattern:
         source:
@@ -203,7 +166,7 @@ Resources:
   ConsoleLoginRule:
     Type: AWS::Events::Rule
     Properties:
-      Name: ConsoleLoginToSlack
+      Name: aws-admin-ConsoleLoginToSlack
       Description: Send Console Logins to Slack (via Lambda)
       EventPattern:
         source:
@@ -227,7 +190,7 @@ Resources:
   CloudFormationRule:
     Type: AWS::Events::Rule
     Properties:
-      Name: CloudFormationEventsToSlack
+      Name: aws-admin-CloudFormationEventsToSlack
       Description: Send CFN Stack Change notifications to Slack (via Lambda)
       EventPattern:
         source:
@@ -251,7 +214,7 @@ Resources:
   IAMActivityRule:
     Type: AWS::Events::Rule
     Properties:
-      Name: IAMActivitiesToSlack
+      Name: aws-admin-IAMActivitiesToSlack
       Description: Send IAM Activity to Slack (via Lambda)
       EventPattern:
         source:
@@ -274,8 +237,6 @@ Resources:
 
 
 Outputs:
-  KmsKeyId:
-    Value: !Ref SlackEncryptionKMSKey
   SlackNotificationLambdaArn:
     Value: !GetAtt SlackNotificationLambda.Arn
     Description: ARN for the Slack Gateway Lambda
