@@ -7,6 +7,7 @@
 # Don't commit the zipfiles
 *.zip
 
+/Attic/*
 
 
 *.gem
