@@ -11,6 +11,7 @@
 ### Create the manifest
 * deploy_stack.rb -g slack_notificationsTemplate.yaml | tee ACCOUNTIDENTIFIER-Manifest.yaml
 * Edit the manifest
+* Be sure to set all the parameters in the Manifest file to be correct
 * Add the following for the PreInstall script
 ```yaml
 # Preinstall script will build the zip upload the Lambda code to the S3 bucket
@@ -33,3 +34,7 @@ PreInstallScript: |
   zip $zip slack_notify_lambda.js && aws s3 cp $zip $object && rm $zip
 ```
 
+### Deploy it
+```
+deploy_stack.rb -m ACCOUNTIDENTIFIER-Manifest.yaml
+```

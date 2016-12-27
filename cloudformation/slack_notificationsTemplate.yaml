@@ -199,10 +199,11 @@ Resources:
       Name: aws-admin-CloudFormationEventsToSlack
       Description: Send CFN Stack Change notifications to Slack (via Lambda)
       EventPattern:
-        source:
-        - cloudformation.amazonaws.com
         detail-type:
         - AWS API Call via CloudTrail
+        detail: 
+          eventSource:
+            - cloudformation.amazonaws.com
       State: ENABLED
       RoleArn: !GetAtt SlackNotificationLambdaInvocationRole.Arn
       Targets:
@@ -223,10 +224,11 @@ Resources:
       Name: aws-admin-IAMActivitiesToSlack
       Description: Send IAM Activity to Slack (via Lambda)
       EventPattern:
-        source:
-        - iam.amazonaws.com
         detail-type:
         - AWS API Call via CloudTrail
+        detail: 
+          eventSource:
+            - iam.amazonaws.com
       State: ENABLED
       RoleArn: !GetAtt SlackNotificationLambdaInvocationRole.Arn
       Targets:
