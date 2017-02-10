@@ -21,6 +21,14 @@ Parameters:
     Type: String
     Default: ":cloud:"
 
+  pEnableLoginRule:
+    Description: Enable to Disable the Login Rule (cuts down spew on busy accounts)
+    Type: String
+    Default: true
+    AllowedValues:
+      - true
+      - false
+
   # Lambda Deploy Params
   pArtifactBucket:
     Description: Bucket Holding Lambdas
@@ -47,8 +55,8 @@ Parameters:
     Type: String
     Default: MyAWSAccount
 
-
-
+Conditions:
+  cEnableLoginRule: !Equals [ !Ref pEnableLoginRule, true ]
 
 Resources:
 
@@ -171,6 +179,7 @@ Resources:
 
   ConsoleLoginRule:
     Type: AWS::Events::Rule
+    Condition: cEnableLoginRule
     Properties:
       Name: aws-admin-ConsoleLoginToSlack
       Description: Send Console Logins to Slack (via Lambda)
@@ -187,6 +196,7 @@ Resources:
 
   SlackNotificationLambdaPermissionConsoleLoginRule:
     Type: AWS::Lambda::Permission
+    Condition: cEnableLoginRule
     Properties:
       FunctionName: !GetAtt SlackNotificationLambda.Arn
       Principal: events.amazonaws.com
@@ -204,6 +214,12 @@ Resources:
         detail: 
           eventSource:
             - cloudformation.amazonaws.com
+          eventName:
+            - CreateStack
+            - DeleteStack
+            - UpdateStack
+            - ExecuteChangeSet
+            - SetStackPolicy
       State: ENABLED
       RoleArn: !GetAtt SlackNotificationLambdaInvocationRole.Arn
       Targets:
@@ -229,6 +245,35 @@ Resources:
         detail: 
           eventSource:
             - iam.amazonaws.com
+          eventName:
+            - CreateUser
+            - CreateRole
+            - CreateLoginProfile
+            - DeactivateMFADevice
+            - DeleteUser
+            - DeletePolicy
+            - DeleteRole
+            - DeleteGroup
+            - AddUserToGroup
+            - AttachGroupPolicy
+            - AttachUserPolicy
+            - CreateAccessKey
+            - CreateAccountAlias
+            - CreateGroup
+            - CreateOpenIdConnectProvider
+            - CreateSamlProvider
+            - DeleteAccountAlias
+            - DeleteAccountPasswordPolicy
+            - RemoveUserFromGroup
+            - SetDefaultPolicyVersion
+            - UpdateAccountPasswordPolicy
+            - UpdateAssumeRolePolicy
+            - UpdateOpenIdConnectProviderThumbprint
+            - UpdateSamlProvider
+            - UpdateServerCertificate
+            - UpdateSigningCertificate
+            - UploadServerCertificate
+            - UploadSigningCertificate
       State: ENABLED
       RoleArn: !GetAtt SlackNotificationLambdaInvocationRole.Arn
       Targets:
